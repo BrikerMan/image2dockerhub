@@ -23,7 +23,7 @@ jobs:
         id: tags
         run: |
           echo ::set-output name=ORIGINAL_IMAGE::$(echo ${GITHUB_REF/refs\/tags\//} | sed "s/--/:/")
-          echo ::set-output name=TARGET_IMAGE::$(echo ${GITHUB_REF/refs\/tags\//} | sed "s/\//--/")
+          echo ::set-output name=TARGET_IMAGE::$(echo ${GITHUB_REF/refs\/tags\//} | sed "s/\//--/g")
           
       - name: Get release version
         run: |  
