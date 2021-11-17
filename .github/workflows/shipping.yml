@@ -23,7 +23,7 @@ jobs:
         id: tags
         run: |
           echo ::set-output name=ORIGINAL_IMAGE::$(echo ${GITHUB_REF/refs\/tags\//} | sed "s/--/:/")
-          echo ::set-output name=TARGET_IMAGE::$(echo ${GITHUB_REF/refs\/tags\//} | sed "s/--/:/" | sed "s/\//--/")
+          echo ::set-output name=TARGET_IMAGE::$(echo ${GITHUB_REF/refs\/tags\//} | sed "s/\//--/")
           
       - name: Get release version
         run: |  
@@ -41,9 +41,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: "brikerman/${{ steps.tags.outputs.TARGET_IMAGE }}"
+          tags: "brikerman/k8s:${{ steps.tags.outputs.TARGET_IMAGE }}"
       - name: Print image tag & digest
         run: |
-          echo "${{ steps.tags.outputs.ORIGINAL_IMAGE }} -> brikerman/${{ steps.tags.outputs.TARGET_IMAGE }}"
+          echo "${{ steps.tags.outputs.ORIGINAL_IMAGE }} -> brikerman/k8s:${{ steps.tags.outputs.TARGET_IMAGE }}"
 
 
