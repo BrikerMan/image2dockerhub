@@ -1,0 +1,49 @@
+name: Ship Image
+
+on:
+  release:
+    types:
+      - released
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.release_version.outputs.VERSION }}
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Get release version
+        id: tags
+        run: |
+          echo ::set-output name=ORIGINAL_IMAGE::$(echo ${GITHUB_REF/refs\/tags\//} | sed "s/--/:/")
+          echo ::set-output name=TARGET_IMAGE::$(echo ${GITHUB_REF/refs\/tags\//} | sed "s/--/:/" | sed "s///--/")
+          
+      - name: Get release version
+        run: |  
+          echo "FROM ${{ steps.tags.outputs.ORIGINAL_IMAGE }}" > Dockerfile
+          
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: "BrikerMan/${{ steps.tags.outputs.TARGET_IMAGE }}"
+      - name: Print image tag & digest
+        run: |
+          echo "${{ steps.tags.outputs.ORIGINAL_IMAGE }} -> BrikerMan/${{ steps.tags.outputs.TARGET_IMAGE }}"
+
+
