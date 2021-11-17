@@ -41,9 +41,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: "BrikerMan/${{ steps.tags.outputs.TARGET_IMAGE }}"
+          tags: "brikerman/${{ steps.tags.outputs.TARGET_IMAGE }}"
       - name: Print image tag & digest
         run: |
-          echo "${{ steps.tags.outputs.ORIGINAL_IMAGE }} -> BrikerMan/${{ steps.tags.outputs.TARGET_IMAGE }}"
+          echo "${{ steps.tags.outputs.ORIGINAL_IMAGE }} -> brikerman/${{ steps.tags.outputs.TARGET_IMAGE }}"
 
 
